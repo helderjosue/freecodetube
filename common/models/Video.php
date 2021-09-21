@@ -3,6 +3,9 @@
 namespace common\models;
 
 use Yii;
+use yii\behaviors\BlameableBehavior;
+use yii\behaviors\TimestampBehavior;
+use yii\helpers\FileHelper;
 
 /**
  * This is the model class for table "{{%videos}}".
@@ -23,6 +26,8 @@ use Yii;
 class Video extends \yii\db\ActiveRecord
 {
 
+    const STATUS_UNLISTED = 0; //constantes do app
+    const STATUS_PUBLISHED = 1;
     /**
      * @var \yii\web\UploadedFile;
      * 
@@ -37,6 +42,16 @@ class Video extends \yii\db\ActiveRecord
         return '{{%videos}}';
     }
 
+    public function behaviors() //configuracoes para acesso a atributos como updated_at, created_at
+    {
+        return [
+            TimestampBehavior::class,
+            [
+                'class' => BlameableBehavior::class,
+                'updatedByAttribute' => false
+            ]
+        ];
+    }
     /**
      * {@inheritdoc}
      */
@@ -50,6 +65,8 @@ class Video extends \yii\db\ActiveRecord
             [['title', 'tags'], 'string', 'max' => 512],
             [['video_name'], 'string', 'max' => 521],
             [['video_id'], 'unique'],
+            ['has_thumbnail', 'default', 'value' => 0],
+            ['status', 'default', 'value' => self::STATUS_UNLISTED],
             [['created_by'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['created_by' => 'id']],
         ];
     }
@@ -73,6 +90,14 @@ class Video extends \yii\db\ActiveRecord
         ];
     }
 
+    public function getStatusLabels()
+    {
+        return [
+            self::STATUS_UNLISTED => 'Unlisted',
+            self::STATUS_PUBLISHED => 'Published',
+        ];
+    }
+
     /**
      * Gets query for [[CreatedBy]].
      *
@@ -92,7 +117,38 @@ class Video extends \yii\db\ActiveRecord
         return new \common\models\query\VideoQuery(get_called_class());
     }
 
+    /**
+     * Method to save de uploaded videos on the specified path
+     */
     public function save($runValidation = true, $attributeNames = null)
     {
+        $isInsert = $this->isNewRecord; //verifica se e um upload
+        if ($isInsert) {
+            $this->video_id = Yii::$app->security->generateRandomString(8);
+            $this->title = $this->video->name;
+            $this->video_name = $this->video->name;
+        }
+        $saved =  parent::save($runValidation, $attributeNames);
+        if (!$saved) {
+            return false;
+        }
+
+        if ($isInsert) {
+            $videoPath = Yii::getAlias('@frontend/web/storage/videos/' . $this->video_id . '.mp4'); // indicacao do directorio
+            if (!is_dir(dirname($videoPath))) { // verifica se o directorio indicado existe, caso nao cria
+                FileHelper::createDirectory(dirname($videoPath));
+            }
+            $this->video->saveAs($videoPath);
+        }
+
+        return true;
+    }
+
+    /**
+     * @return get the link of the video and show on the layout
+     */
+    public function getVideoLink()
+    {
+        return Yii::$app->params['frontendUrl'] . 'storage/videos/' . $this->video_id . '.mp4';
     }
 }
