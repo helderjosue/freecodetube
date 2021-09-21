@@ -30,9 +30,11 @@ $this->params['breadcrumbs'][] = $this->title;
         <input type="file" id="videoFile" name="video" style="visibility:hidden;">
         </button> -->
 
-        <?php \yii\bootstrap4\ActiveForm::begin([
+        <?php $form = \yii\bootstrap4\ActiveForm::begin([
             'options' => ['enctype' => 'multipart/form-data']
         ]) ?>
+        <br>
+        <p><?php echo $form->errorSummary($model) ?></p>
 
         <div>
             <label for="videoFile" class="btn btn-primary btn-file">Select File</label>
