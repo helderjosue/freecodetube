@@ -30,13 +30,10 @@ AppAsset::register($this);
         <!-- NAVBAR RETIRADA DAQUI -->
         <div class="wrap h-100 d-flex flex-column">
             <?php echo $this->render('header') ?>
-
             <?php echo $content ?>
         </div>
 
     </div>
-
-
 
     <?php $this->endBody() ?>
 </body>
