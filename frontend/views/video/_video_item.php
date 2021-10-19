@@ -20,7 +20,7 @@ use yii\helpers\Url;
     <div class="card-body p-2">
         <h6 class="card-title m-0"> <?php echo $model->title ?> </h6>
         <p class="card-text text-muted m-0"><?php echo $model->createdBy->username?></p>
-        <p class="card-text text-muted m-0">150 Views -- <?php echo Yii::$app->formatter->asRelativeTime($model->created_at)?></p>
+        <p class="card-text text-muted m-0"><?php echo $model->getViews()->count() ?> Views -- <?php echo Yii::$app->formatter->asRelativeTime($model->created_at)?></p>
 
     </div>
 </div>

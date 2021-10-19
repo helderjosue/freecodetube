@@ -1,5 +1,6 @@
 <?php
 use common\models\Video;
+use yii\helpers\Url;
 /**
  * @var $model Video;
  */
@@ -17,15 +18,18 @@ use common\models\Video;
         <h6><?php echo $model->title ?></h6>
         <div class="d-flex justify-content-between align-items-center">
             <div>
-                151 Views -- <?php echo Yii::$app->formatter->asDate($model->created_at)?>
+                <?php echo $model->getViews()->count() ?> Views -- <?php echo Yii::$app->formatter->asDate($model->created_at)?>
             </div>
             <div>
-                <button class="btn btn-sm btn-outline-primary">
+                <?php \yii\widgets\Pjax::begin()?>
+                <a href="<?php echo Url::to(['/video/like', 'id' => $model->video_id]) ?>"
+                   class="btn btn-sm btn-outline-primary" data-method = "post" data-pjax = "1">
                     <i class="fas fa-thumbs-up"></i>155
-                </button>
+                </a>
                 <button class="btn btn-sm btn-outline-secundary">
                     <i class="fas fa-thumbs-down"></i> 6
                 </button>
+				<?php \yii\widgets\Pjax::end()?>
             </div>
         </div>
 	</div>
