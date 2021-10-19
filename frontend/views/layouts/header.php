@@ -8,10 +8,11 @@ use yii\bootstrap4\NavBar;
         'brandUrl' => Yii::$app->homeUrl,
         'options' => ['class' => 'navbar-expand-lg navbar-light bg-light shadow-sm']
     ]);
-    $menuItems = [
-        ['label' => 'Create', 'url' => ['/video/create']],
-    ];
+//    $menuItems = [
+//        ['label' => 'Signup', 'url' => ['/video/create']],
+//    ];
     if (Yii::$app->user->isGuest) {
+        $menuItems[] = ['label' => 'Signup', 'url' => ['/site/signup']];
         $menuItems[] = ['label' => 'Login', 'url' => ['/site/login']];
     } else {
         // $menuItems[] = '<li>'

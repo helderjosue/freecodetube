@@ -20,7 +20,7 @@ $this->beginContent('@frontend/views/layouts/base.php');
   <main class="d-flex">
 
     <!-- <div class="content-wrapper p-3">  content-wrapper faz o form ter full width-->
-    <div class=" p-3">
+    <div class="container p-3">
 
       <?= Alert::widget() ?>
       <?= $content ?>
