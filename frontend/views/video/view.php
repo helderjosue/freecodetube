@@ -22,13 +22,16 @@ use yii\helpers\Url;
             </div>
             <div>
                 <?php \yii\widgets\Pjax::begin()?>
-                <a href="<?php echo Url::to(['/video/like', 'id' => $model->video_id]) ?>"
-                   class="btn btn-sm btn-outline-primary" data-method = "post" data-pjax = "1">
-                    <i class="fas fa-thumbs-up"></i>155
-                </a>
-                <button class="btn btn-sm btn-outline-secundary">
-                    <i class="fas fa-thumbs-down"></i> 6
-                </button>
+<!--                <a href="--><?php //echo Url::to(['/video/like', 'id' => $model->video_id]) ?><!--"-->
+<!--                   class="btn btn-sm btn-outline-primary" data-method = "post" data-pjax = "1">-->
+<!--                    <i class="fas fa-thumbs-up"></i>155-->
+<!--                </a>-->
+<!--                <button class="btn btn-sm btn-outline-secundary">-->
+<!--                    <i class="fas fa-thumbs-down"></i> 6-->
+<!--                </button>-->
+                <?php  echo $this->render('_buttons', [
+                        'model' =>$model
+                ]) ?>
 				<?php \yii\widgets\Pjax::end()?>
             </div>
         </div>
